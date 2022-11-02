@@ -28,6 +28,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+        freeCompilerArgs +=  "-Xjvm-default=all"
     }
 
     buildFeatures {
@@ -43,9 +44,16 @@ android {
 dependencies {
     implementation 'no.nordicsemi.android:ble-ktx:2.6.0-alpha03'
 
-    // Kable BLE
+    // Juul and kable BLE libraries
     implementation("com.juul.kable:core:0.19.0")
     implementation("com.juul.tuulbox:coroutines:6.3.0")
+    implementation("com.juul.tuulbox:encoding-jvm:6.3.0")
+
+    // Juul library for the elementView composable
+    implementation("com.juul.krayon:element-view-android:0.13.0")
+
+    implementation("com.juul.exercise:annotations:0.11.0")
+//    implementation("com.juul.exercise:compile:0.11.0")
 
     // Compose
     implementation 'androidx.compose.runtime:runtime:1.0.0'

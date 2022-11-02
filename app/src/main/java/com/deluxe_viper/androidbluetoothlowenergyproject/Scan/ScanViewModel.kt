@@ -36,8 +36,8 @@ class ScanViewModel(application: Application) : AndroidViewModel(application) {
     fun startScan() {
         if (_status.value == ScanStatus.Scanning) return // Scan already in progress
         _status.value = ScanStatus.Scanning
-
         scanScope.launch {
+
             withTimeoutOrNull(SCAN_DURATION_MILLIS) {
                 scanner
                     .advertisements

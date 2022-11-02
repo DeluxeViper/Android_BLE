@@ -1,4 +1,4 @@
-package com.deluxe_viper.androidbluetoothlowenergyproject
+package com.deluxe_viper.androidbluetoothlowenergyproject.Scan
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -33,6 +33,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.deluxe_viper.androidbluetoothlowenergyproject.AppTheme
+import com.deluxe_viper.androidbluetoothlowenergyproject.Device.DeviceActivity
+import com.deluxe_viper.androidbluetoothlowenergyproject.ScanStatus
+import com.deluxe_viper.androidbluetoothlowenergyproject.ScanViewModel
 import com.deluxe_viper.androidbluetoothlowenergyproject.icons.BluetoothDisabled
 import com.deluxe_viper.androidbluetoothlowenergyproject.icons.LocationDisabled
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -41,6 +45,9 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.juul.kable.Advertisement
 import com.juul.tuulbox.coroutines.flow.broadcastReceiverFlow
 import kotlinx.coroutines.flow.map
+import com.deluxe_viper.androidbluetoothlowenergyproject.enableBluetooth
+import com.deluxe_viper.androidbluetoothlowenergyproject.openAppDetails
+//import com.deluxe_viper.androidbluetoothlowenergyproject.Device.DeviceActivityIntent
 
 class ScanActivity : ComponentActivity() {
 
@@ -65,7 +72,7 @@ class ScanActivity : ComponentActivity() {
                             TextStyle(color = contentColorFor(backgroundColor = MaterialTheme.colors.background))
                         ) {
                             val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                listOf(BLUETOOTH_SCAN, BLUETOOTH_CONNECT)
+                                listOf(BLUETOOTH_SCAN, BLUETOOTH_CONNECT, ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION)
                             } else {
                                 listOf(ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION)
                             }
@@ -107,7 +114,7 @@ class ScanActivity : ComponentActivity() {
     private fun onAdvertisementClicked(advertisement: Advertisement, context: Context) {
         viewModel.stop()
         val intent = Intent(context, DeviceActivity::class.java)
-
+        intent.putExtra("macAddress", advertisement.address)
         context.startActivity(intent)
     }
 
@@ -149,6 +156,9 @@ private fun BoxScope.StatusSnackbar(viewModel: ScanViewModel) {
             is ScanStatus.Scanning -> "Scanning"
             is ScanStatus.Stopped -> "Idle"
             is ScanStatus.Failed -> "Error: ${status.message}"
+            else -> {
+                throw IllegalStateException("Error. ScanStatus not found.")
+            }
         }
         Snackbar(
             Modifier
@@ -227,6 +237,29 @@ private fun BluetoothPermissionsNotAvailable(openSettingsAction: () -> Unit) {
         description = "Bluetooth permission denied. Please, grant access on the Settings screen.",
         buttonText = "Open Settings",
         onClick = openSettingsAction,
+    )
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+private fun LocationPermissionsNotGranted(permissions: MultiplePermissionsState) {
+    ActionRequired(
+        icon = Icons.Filled.LocationDisabled,
+        contentDescription = "Location permissions required",
+        description = "Location permissions are required for scanning",
+        buttonText = "Continue",
+        onClick = permissions::launchMultiplePermissionRequest
+    )
+}
+
+@Composable
+private fun LocationPermissionsNotAvailable(openSettingsAction: () -> Unit) {
+    ActionRequired(
+        icon = Icons.Filled.LocationDisabled,
+        contentDescription = "Location permissions required",
+        description = "Location permissions are required for scanning",
+        buttonText = "Continue",
+        onClick = openSettingsAction
     )
 }
 

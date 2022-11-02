@@ -1,5 +1,6 @@
 package com.deluxe_viper.androidbluetoothlowenergyproject
 
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
@@ -16,6 +17,10 @@ object RequestCode {
 fun Activity.enableBluetooth() {
     startActivityForResult(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), RequestCode.EnableBluetooth)
 }
+
+//fun Activity.enableLocation() {
+//    startActivityForResult(Intent(Manifest.permission.ACCESS_FINE_LOCATION))
+//}
 
 fun Activity.openAppDetails() {
     startActivity(Intent().apply {
