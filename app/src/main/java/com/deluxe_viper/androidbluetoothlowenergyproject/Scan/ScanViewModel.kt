@@ -48,7 +48,7 @@ class ScanViewModel(application: Application) : AndroidViewModel(application) {
                         if (cause == null || cause is CancellationException) _status.value =
                             ScanStatus.Stopped
                     }
-//                    .filter { it.isESP32 } // Currently filtering for the ESP32 I have setup(this will be changed in the future
+                    .filter { it.isESP32 } // Currently filtering for the ESP32 I have setup(this will be changed in the future
                     .collect { advertisement ->
                         found[advertisement.address] = advertisement
                         _advertisements.value = found.values.toList()
@@ -69,7 +69,8 @@ class ScanViewModel(application: Application) : AndroidViewModel(application) {
 
 private val Advertisement.isESP32
     get() = name?.startsWith("Long name works now") == true ||
-            name?.startsWith("Long name") == true
+            name?.startsWith("Long name") == true ||
+            name?.startsWith("DSD") == true
 
 private fun CoroutineScope.childScope() =
     CoroutineScope(coroutineContext + Job(coroutineContext[Job]))
