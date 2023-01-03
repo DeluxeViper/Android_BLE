@@ -69,7 +69,8 @@ class ScanViewModel(application: Application) : AndroidViewModel(application) {
 
 private val Advertisement.isESP32
     get() = name?.startsWith("Long name works now") == true ||
-            name?.startsWith("Long name") == true
+            name?.startsWith("Long name") == true ||
+            name?.startsWith("DSD") == true
 
 private fun CoroutineScope.childScope() =
     CoroutineScope(coroutineContext + Job(coroutineContext[Job]))
