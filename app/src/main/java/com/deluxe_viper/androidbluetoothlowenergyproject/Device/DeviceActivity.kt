@@ -92,6 +92,10 @@ class DeviceActivity : ComponentActivity() {
                                 deviceViewModel.discoverData()
                             }
 
+                            Button(onClick = {deviceViewModel.writeData()}) { // only works once connected
+                                Text(text = "Write Data")
+                            }
+
 //                            Log.d(TAG, "onCreate: dataSource: ${deviceViewModel.data}")
 
 //                            val data by deviceViewModel.data.collectAsState(initial = 0)

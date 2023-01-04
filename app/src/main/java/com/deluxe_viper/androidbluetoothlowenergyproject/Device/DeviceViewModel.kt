@@ -22,6 +22,14 @@ class DeviceViewModel(application: Application, macAddress: String) :
     private val peripheral = viewModelScope.peripheral(macAddress)
     val state = peripheral.state
 
+    //HM-10 Char
+    private val DSDCharacteristic = characteristicOf(
+        service = "0000ffe0-0000-1000-8000-00805f9b34fb",
+        characteristic = "0000ffe1-0000-1000-8000-00805f9b34fb"
+    )
+
+    private val writeData = byteArrayOf(0x54, 0x65, 0x73, 0x74)// ascii Test
+
 //    private val deviceTag = DeviceTag(peripheral)
 
 
@@ -48,6 +56,10 @@ class DeviceViewModel(application: Application, macAddress: String) :
         viewModelScope.disconnect()
     }
 
+    fun writeData() {
+        viewModelScope.write()
+    }
+
     fun discoverData() {
         if (peripheral.state.value != State.Connected){
             Log.e(TAG, "discoverData: Cannot discover data without BLE connection")
@@ -65,6 +77,13 @@ class DeviceViewModel(application: Application, macAddress: String) :
         launch {
             Log.d(TAG, "disconnect")
             peripheral.disconnect()
+        }
+    }
+
+    private fun CoroutineScope.write() {
+        launch {
+            Log.d(TAG, "write")
+            peripheral.write(DSDCharacteristic, writeData, WriteType.WithoutResponse)
         }
     }
 

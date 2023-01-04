@@ -18,16 +18,14 @@ import kotlinx.coroutines.flow.map
 //                //    beb5483e-36e1-4688-b7f5-ea07361b26a8
 //)
 
-class DeviceTag(
-    private val peripheral: Peripheral
-) {
-    val data2: Flow<Int> = peripheral.observe(gattCharacteristic)
-        .map {
-            // TODO: What kind of values can we print here?
-            Log.d(TAG, "Characteristic Values: $it ")
-        }
-
-    val data: List<DiscoveredService>? = peripheral.services
+class DeviceTag(private val peripheral: Peripheral) {
+//    val data2: Flow<Int> = peripheral.observe(gattCharacteristic)
+//        .map {
+//            // TODO: What kind of values can we print here?
+//            Log.d(TAG, "Characteristic Values: $it ")
+//        }
+//
+//    val data: List<DiscoveredService>? = peripheral.services
 
     suspend fun readCharacteristic(): Int {
         val value = peripheral.read(gattCharacteristic)
@@ -43,6 +41,9 @@ class DeviceTag(
             service = SERVICE_UUID,
             characteristic = "beb5483e-36e1-4688-b7f5-ea07361b26a8"
             //    beb5483e-36e1-4688-b7f5-ea07361b26a8
+            // HM-10 Service: 0000ffe0-0000-1000-8000-00805f9b34fb
+            // HM-10 Characteristic: 0000ffe1-0000-1000-8000-00805f9b34fb
+            //
         )
     }
 }
